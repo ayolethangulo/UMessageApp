@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1003020862441",
+    "firebase_url": "https://umessagerapp.firebaseio.com",
+    "project_id": "umessagerapp",
+    "storage_bucket": "umessagerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003020862441:android:444adf4b59135df1a20178",
+        "android_client_info": {
+          "package_name": "com.example.umessageapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003020862441-4e209r6o9i0eqi92gpc2j7qc8dre3o0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWmArXZ6_dNCRQnc-97zy7L3Iqf2DMMmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003020862441-4e209r6o9i0eqi92gpc2j7qc8dre3o0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
