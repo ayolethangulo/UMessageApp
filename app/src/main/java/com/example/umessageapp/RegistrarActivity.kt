@@ -58,7 +58,7 @@ class RegistrarActivity : AppCompatActivity() {
                         val userHashMap = HashMap<String, Any>()
                         userHashMap["uid"]= firebaseUserID
                         userHashMap["username"]= username
-                        userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/umessagerapp.appspot.com/o/profile.png?alt=media&token=c986b999-cfa6-441a-9134-e13704c01dab"
+                        userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/umessagerapp.appspot.com/o/profile.png?alt=media&token=77d02d9f-64c6-4ec8-800e-9eb0245fdd83"
                         userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/umessagerapp.appspot.com/o/cover.jpg?alt=media&token=a9950cfe-e9f2-4f33-8487-ea3c20c4dfe4"
                         userHashMap["status"] = "offline"
                         userHashMap["search"] = username.toLowerCase()
