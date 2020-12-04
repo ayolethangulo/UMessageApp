@@ -15,6 +15,8 @@ import androidx.viewpager.widget.ViewPager
 import com.example.umessageapp.Fragments.AjustesFragment
 import com.example.umessageapp.Fragments.BuscarFragment
 import com.example.umessageapp.Fragments.ChatsFragment
+import com.example.umessageapp.Model.Chat
+import com.example.umessageapp.Model.ChatList
 import com.example.umessageapp.Model.User
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -42,14 +44,41 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout: TabLayout = findViewById(R.id.tab_layout)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
-        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
-        viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
-        viewPagerAdapter.addFragment(BuscarFragment(), "Buscar")
-        viewPagerAdapter.addFragment(AjustesFragment(), "Configuración")
+        val ref = FirebaseDatabase.getInstance().reference.child("Chats")
+        ref!!.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot)
+            {
+                val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+                var countUnreadMessages = 0
 
-        viewPager.adapter = viewPagerAdapter
-        tabLayout.setupWithViewPager(viewPager)
+                for (dataSnapshot in p0.children)
+                {
+                    val chat = dataSnapshot.getValue(Chat::class.java)
+
+                    if (chat!!.getReceiver().equals(firebaseUser!!.uid) && !chat.isIsseen())
+                    {
+                        countUnreadMessages += 1
+                    }
+                }
+                if (countUnreadMessages == 0)
+                {
+                    viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
+                }
+                else
+                {
+                    viewPagerAdapter.addFragment(ChatsFragment(), "($countUnreadMessages) Chats")
+                }
+                viewPagerAdapter.addFragment(BuscarFragment(), "Buscar")
+                viewPagerAdapter.addFragment(AjustesFragment(), "Configuración")
+                viewPager.adapter = viewPagerAdapter
+                tabLayout.setupWithViewPager(viewPager)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
 
         //display username and profile picture
         refUsers!!.addValueEventListener(object : ValueEventListener{
