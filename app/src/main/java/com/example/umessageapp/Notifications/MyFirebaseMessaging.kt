@@ -58,7 +58,7 @@ class MyFirebaseMessaging : FirebaseMessagingService()
         val intent = Intent(this, MessageChatActivity::class.java)
 
         val bundle = Bundle()
-        bundle.putString("userid", user)
+        bundle.putString("visit_id", user)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -97,7 +97,7 @@ class MyFirebaseMessaging : FirebaseMessagingService()
         val intent = Intent(this, MessageChatActivity::class.java)
 
         val bundle = Bundle()
-        bundle.putString("userid", user)
+        bundle.putString("visit_id", user)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 

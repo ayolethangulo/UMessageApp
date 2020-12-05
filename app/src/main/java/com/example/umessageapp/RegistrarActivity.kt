@@ -63,7 +63,7 @@ class RegistrarActivity : AppCompatActivity() {
                         userHashMap["status"] = "offline"
                         userHashMap["search"] = username.toLowerCase()
                         userHashMap["facebook"] = "https://m.facebook.com"
-                        userHashMap["instagram"] = "https://m.instragram.com"
+                        userHashMap["instagram"] = "https://m.instagram.com"
                         userHashMap["website"] = "https://www.google.com/"
 
                         refUsers.updateChildren(userHashMap)

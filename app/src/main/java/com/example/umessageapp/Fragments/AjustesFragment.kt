@@ -113,9 +113,10 @@ class AjustesFragment : Fragment() {
         return view
     }
 
+    ///////
     private fun setSocialLinks() {
         val builder: AlertDialog.Builder =
-            AlertDialog.Builder(context!!, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+            AlertDialog.Builder(this.requireContext(), R.style.Theme_AppCompat_DayNight_Dialog_Alert)
 
         if (socialChecker == "website"){
             builder.setTitle("Escriba URL:")

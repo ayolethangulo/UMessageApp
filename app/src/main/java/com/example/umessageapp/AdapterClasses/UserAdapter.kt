@@ -11,8 +11,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.umessageapp.MainActivity
 import com.example.umessageapp.MessageChatActivity
+import com.example.umessageapp.Model.Chat
 import com.example.umessageapp.Model.User
 import com.example.umessageapp.R
+import com.example.umessageapp.VisitUserProfileActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,6 +33,7 @@ class UserAdapter(
     private val mContext: Context
     private val mUsers: List<User>
     private var isChatCheck: Boolean
+    var lastMsg: String = ""
 
     init {
         this.mUsers = mUsers
@@ -80,7 +88,7 @@ class UserAdapter(
                 "Ver Perfil"
             )
             val builder: AlertDialog.Builder = AlertDialog.Builder(mContext)
-            builder.setTitle("Qué desea?")
+            builder.setTitle("Acción")
             builder.setItems(options, DialogInterface.OnClickListener{ dialog, position ->
                 if (position == 0){
                     val intent = Intent(mContext, MessageChatActivity::class.java)
@@ -88,7 +96,9 @@ class UserAdapter(
                     mContext.startActivity(intent)
                 }
                 if (position == 1){
-                    
+                    val intent = Intent(mContext, VisitUserProfileActivity::class.java)
+                    intent.putExtra("visit_id", user.getUID())
+                    mContext.startActivity(intent)
                 }
             })
             builder.show()
@@ -112,9 +122,44 @@ class UserAdapter(
         }
     }
 
-    private fun retrieveLastMessage(uid: String?, lastMessageTxt: TextView)
+    private fun retrieveLastMessage(chatUserId: String?, lastMessageTxt: TextView)
     {
+        lastMsg = "defaultMsg"
 
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val refrence = FirebaseDatabase.getInstance().reference.child("Chats")
 
+        refrence.addValueEventListener(object : ValueEventListener
+        {
+            override fun onDataChange(p0: DataSnapshot)
+            {
+                for (dataSnapshot in p0.children)
+                {
+                    val chat: Chat? = dataSnapshot.getValue(Chat::class.java)
+
+                    if (firebaseUser!=null && chat!=null)
+                    {
+                        if (chat.getReceiver() == firebaseUser!!.uid &&
+                            chat.getSender() == chatUserId ||
+                                chat.getReceiver() == chatUserId &&
+                                chat.getSender() == firebaseUser!!.uid)
+                            {
+                            lastMsg = chat.getMessage()!!
+                        }
+                    }
+                }
+                when(lastMsg)
+                {
+                    "defaultMsg" -> lastMessageTxt.text = "No Mensaje"
+                    "Envió una imagen" -> lastMessageTxt.text = "Imagen enviada"
+                    else -> lastMessageTxt.text = lastMsg
+                }
+                lastMsg = "defaultMsg"
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
     }
 }
