@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.umessageapp.AdapterClasses.UserAdapter
 import com.example.umessageapp.Model.ChatList
 import com.example.umessageapp.Model.User
+import com.example.umessageapp.Notifications.Token
 import com.example.umessageapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -17,6 +18,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.iid.FirebaseInstanceId
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,10 +82,22 @@ class ChatsFragment : Fragment() {
              }
          })
 
+        updateToken(FirebaseInstanceId.getInstance().token)
+
         return view
     }
 
-    private fun consultarChatList(){
+
+    private fun updateToken(token: String?)
+    {
+        val ref = FirebaseDatabase.getInstance().reference.child("Token")
+        val token1 = Token(token!!)
+        ref.child(firebaseUser!!.uid).setValue(token)
+    }
+
+
+    private fun consultarChatList()
+    {
         mUsers = ArrayList()
 
         val ref = FirebaseDatabase.getInstance().reference.child("Users")
