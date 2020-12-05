@@ -23,7 +23,7 @@ class UserAdapter(
     isChatCheck: Boolean
     ) : RecyclerView.Adapter<UserAdapter.ViewHolder?>()
 {
-    private val mContext:Context
+    private val mContext: Context
     private val mUsers: List<User>
     private var isChatCheck: Boolean
 
@@ -46,6 +46,33 @@ class UserAdapter(
         val user: User = mUsers[i]
         holder.userNameTxt.text = user.getUserName()
         Picasso.get().load(user.getProfile()).placeholder(R.drawable.profile).into(holder.profileImageView)
+
+        if (isChatCheck)
+        {
+            retrieveLastMessage(user.getUID(), holder.lastMessageTxt)
+        }
+        else
+        {
+            holder.lastMessageTxt.visibility = View.GONE
+        }
+
+        if (isChatCheck){
+            if (user.getStatus() == "online")
+            {
+                holder.onlineImageView.visibility = View.VISIBLE
+                holder.offlineImageView.visibility = View.GONE
+            }
+            else
+            {
+                holder.onlineImageView.visibility = View.GONE
+                holder.offlineImageView.visibility = View.VISIBLE
+            }
+        }
+        else
+        {
+            holder.onlineImageView.visibility = View.GONE
+            holder.offlineImageView.visibility = View.GONE
+        }
 
         holder.itemView.setOnClickListener {
             val options = arrayOf<CharSequence>(
@@ -83,5 +110,11 @@ class UserAdapter(
             lastMessageTxt = itemView.findViewById(R.id.message_last)
 
         }
+    }
+
+    private fun retrieveLastMessage(uid: String?, lastMessageTxt: TextView)
+    {
+
+
     }
 }

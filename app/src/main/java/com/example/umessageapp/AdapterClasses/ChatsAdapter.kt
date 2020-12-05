@@ -1,18 +1,25 @@
 package com.example.umessageapp.AdapterClasses
 
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.umessageapp.Model.Chat
 import com.example.umessageapp.R
+import com.example.umessageapp.ViewFullImageActivity
+import com.example.umessageapp.WelcomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -65,6 +72,32 @@ class ChatsAdapter(
                 holder.show_text_message!!.visibility = View.GONE
                 holder.right_image_view!!.visibility = View.VISIBLE
                 Picasso.get().load(chat.getUrl()).into(holder.right_image_view)
+
+                holder.right_image_view!!.setOnClickListener {
+                    val options = arrayOf<CharSequence>(
+                        "Ver imagen",
+                        "Eliminar imagen",
+                        "Cancelar"
+                    )
+
+                    var builder: AlertDialog.Builder = AlertDialog.Builder(holder.itemView.context)
+                    builder.setTitle("Qué desea realizar?")
+
+                    builder.setItems(options, DialogInterface.OnClickListener{
+                        dialog, which ->
+                        if (which == 0)
+                        {
+                            val intent = Intent(mContext, ViewFullImageActivity::class.java)
+                            intent.putExtra("url", chat.getUrl())
+                            mContext.startActivity(intent)
+                        }
+                        else if (which == 1)
+                        {
+                            deleteSentMessage(position, holder)
+                        }
+                    })
+                    builder.show()
+                }
             }
             //imagen del mensaje - lado izquierdo
             else if (!chat.getSender().equals(firebaseUser!!.uid))
@@ -72,12 +105,52 @@ class ChatsAdapter(
                 holder.show_text_message!!.visibility = View.GONE
                 holder.left_image_view!!.visibility = View.VISIBLE
                 Picasso.get().load(chat.getUrl()).into(holder.left_image_view)
+
+                holder.left_image_view!!.setOnClickListener {
+                    val options = arrayOf<CharSequence>(
+                        "Ver imagen",
+                        "Cancelar"
+                    )
+
+                    var builder: AlertDialog.Builder = AlertDialog.Builder(holder.itemView.context)
+                    builder.setTitle("Qué desea realizar?")
+
+                    builder.setItems(options, DialogInterface.OnClickListener{
+                            dialog, which ->
+                        if (which == 0)
+                        {
+                            val intent = Intent(mContext, ViewFullImageActivity::class.java)
+                            intent.putExtra("url", chat.getUrl())
+                            mContext.startActivity(intent)
+                        }
+                    })
+                    builder.show()
+                }
             }
         }
         //Texto en el mensaje
         else
         {
             holder.show_text_message!!.text = chat.getMessage()
+
+            holder.show_text_message!!.setOnClickListener {
+                val options = arrayOf<CharSequence>(
+                    "Eliminar Mensaje",
+                    "Cancelar"
+                )
+
+                var builder: AlertDialog.Builder = AlertDialog.Builder(holder.itemView.context)
+                builder.setTitle("Qué desea realizar?")
+
+                builder.setItems(options, DialogInterface.OnClickListener{
+                        dialog, which ->
+                    if (which == 0)
+                    {
+                        deleteSentMessage(position, holder)
+                    }
+                })
+                builder.show()
+            }
         }
 
         //sent and seen message
@@ -137,6 +210,23 @@ class ChatsAdapter(
         }else{
             0
         }
+    }
+
+    private fun deleteSentMessage(position: Int, holder: ChatsAdapter.ViewHolder)
+    {
+        val ref = FirebaseDatabase.getInstance().reference.child("Chats")
+            .child(mChatList.get(position).getMessageId()!!)
+            .removeValue()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                {
+                    Toast.makeText(holder.itemView.context, "Eliminado.", Toast.LENGTH_LONG).show()
+                }
+                else
+                {
+                    Toast.makeText(holder.itemView.context, "Falló, no se elimino", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
 }

@@ -118,9 +118,9 @@ class BuscarFragment : Fragment() {
             .startAt(str)
             .endAt(str + "\uf8ff")
         queryUsers.addValueEventListener(object : ValueEventListener{
-
             override fun onDataChange(p0: DataSnapshot) {
                 (mUsers as ArrayList<User>).clear()
+
                 for (snapshot in p0.children)
                 {
                     val user: User? = snapshot.getValue(User::class.java)
@@ -131,7 +131,6 @@ class BuscarFragment : Fragment() {
                 }
                 userAdapter = UserAdapter(context!!, mUsers!!, false)
                 recyclerView!!.adapter = userAdapter
-
             }
 
             override fun onCancelled(p0: DatabaseError) {
