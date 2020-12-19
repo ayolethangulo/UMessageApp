@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateStatus(status: String){
-        val ref = FirebaseDatabase.getInstance().reference.child("User").child(firebaseUser!!.uid)
+        val ref = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
 
         val hashMap= HashMap<String,Any>()
         hashMap["status"] = status
@@ -162,13 +162,13 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        updateStatus("onLine")
+        updateStatus("online")
     }
 
     override fun onPause() {
         super.onPause()
 
-        updateStatus("offLine")
+        updateStatus("offline")
     }
 
 }

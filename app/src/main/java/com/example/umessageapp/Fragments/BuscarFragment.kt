@@ -99,8 +99,11 @@ class BuscarFragment : Fragment() {
                             (mUsers as ArrayList<User>).add(user)
                         }
                     }
-                    userAdapter = UserAdapter(context!!, mUsers!!, false)
-                    recyclerView!!.adapter = userAdapter
+                    activity.let{
+                        userAdapter = UserAdapter(context!!, mUsers!!, false)
+                        recyclerView!!.adapter = userAdapter
+                    }
+
                 }
             }
 
@@ -129,8 +132,11 @@ class BuscarFragment : Fragment() {
                         (mUsers as ArrayList<User>).add(user)
                     }
                 }
-                userAdapter = UserAdapter(context!!, mUsers!!, false)
-                recyclerView!!.adapter = userAdapter
+                activity?.let{
+                    userAdapter = UserAdapter(context!!, mUsers!!, false)
+                    recyclerView!!.adapter = userAdapter
+                }
+
             }
 
             override fun onCancelled(p0: DatabaseError) {
